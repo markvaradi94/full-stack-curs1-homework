@@ -9,5 +9,8 @@
         <module name="curs1-homework" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="curs1-homework" target="15" />
+    </bytecodeTargetLevel>
   </component>
 </project>
