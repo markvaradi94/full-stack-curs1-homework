@@ -8,10 +8,10 @@ import java.util.Objects;
 import static java.util.Optional.ofNullable;
 
 public class BetterProduct {
-    private final String name;
-    private final int price;
-    private final List<Category> categories;
-    private final String description;
+    private String name;
+    private int price;
+    private List<Category> categories;
+    private String description;
 
     public BetterProduct(String name, int price, List<Category> categories, String description) {
         this.name = name.toUpperCase();
@@ -22,17 +22,7 @@ public class BetterProduct {
         this.description = description;
     }
 
-    private BetterProduct(BetterProductBuilder builder) {
-        this.name = builder.state.name.toUpperCase();
-        this.price = builder.state.price;
-        this.categories = ofNullable(builder.state.categories)
-                .map(ArrayList::new)
-                .orElseGet(ArrayList::new);
-        this.description = builder.state.description;
-    }
-
-    private BetterProduct() {
-        this("", 0, new ArrayList<>(), "");
+    public BetterProduct() {
     }
 
     public String getName() {
@@ -104,7 +94,7 @@ public class BetterProduct {
         }
 
         public BetterProduct build() {
-            return new BetterProduct(this);
+            return new BetterProduct(state.name, state.price, state.categories, state.description);
         }
     }
 }

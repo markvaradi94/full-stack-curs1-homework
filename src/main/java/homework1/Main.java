@@ -17,6 +17,7 @@ public class Main {
                 .price(2500)
                 .category(ELECTRONICS)
                 .category(DYI)
+                .category(FOOD)
                 .description("25 inch monitor")
                 .build();
 
@@ -45,12 +46,6 @@ public class Main {
 
         Shop shop = new Shop(List.of());
 
-        System.out.println("=====================");
-        System.out.println(shop.getProducts());
-        System.out.println("=====================");
-        System.out.println(shop.getInventoryItems());
-        System.out.println("=====================");
-
         shop.addProduct
                 (betterProduct()
                                 .name("tomato")
@@ -75,21 +70,15 @@ public class Main {
                         .build(),
                 1);
 
-        System.out.println();
-        System.out.println(shop.getInventoryItems());
-
         shop.increaseInventoryForProduct("pc", 30);
 
-        System.out.println();
-        System.out.println(shop.getInventoryItems());
-
-        System.out.println(shop.buyItem("pc", 10));
-        System.out.println();
-        System.out.println(shop.getInventoryItems());
+        System.out.println(shop.buyItem("pc", 5));
 
         System.out.println(shop.buyItem("pc", 50));
         System.out.println();
-        System.out.println(shop.getInventoryItems());
         System.out.println(shop.getProducts());
+
+        System.out.println(shop.buyItem("pc", 50));
+        System.out.println();
     }
 }

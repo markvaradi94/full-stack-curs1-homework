@@ -8,30 +8,22 @@ import static java.util.Optional.ofNullable;
 
 public class Shop {
     private final List<BetterProduct> products;
-    private final List<InventoryItem> inventoryItems;
+    private final List<InventoryItem> inventoryItems = new ArrayList<>();
 
     public Shop(List<BetterProduct> products) {
         this.products = ofNullable(products)
                 .map(ArrayList::new)
                 .orElseGet(ArrayList::new);
 
-        this.inventoryItems = Optional.of(createInventoryList())
-                .map(ArrayList::new)
-                .orElseGet(ArrayList::new);
+        createInventoryList();
     }
 
     public List<BetterProduct> getProducts() {
         return Collections.unmodifiableList(products);
     }
 
-    public List<InventoryItem> getInventoryItems() {
-        return Collections.unmodifiableList(inventoryItems);
-    }
-
-    private List<InventoryItem> createInventoryList() {
-        List<InventoryItem> items = new ArrayList<>();
-        products.forEach(product -> items.add(createInventoryEntryForProduct(product.getName())));
-        return items;
+    private void createInventoryList() {
+        products.forEach(product -> inventoryItems.add(createInventoryEntryForProduct(product.getName())));
     }
 
     public void addProduct(BetterProduct product, int quantity) {
@@ -46,9 +38,15 @@ public class Shop {
         increaseItemQuantity(productName, quantity);
     }
 
-    public InventoryItem buyItem(String productName, int quantity) {
+    public String buyItem(String productName, int quantity) {
         InventoryItem item = findOrThrowByProductName(productName);
-        return enoughItemsInStock(item, quantity) ? sellItem(item, quantity) : partialSell(item);
+        return enoughItemsInStock(item, quantity) ?
+                createTransactionMessage(sellItem(item, quantity)) : createTransactionMessage(partialSell(item));
+    }
+
+    private String createTransactionMessage(InventoryItem transactionItem) {
+        return "Successful transaction for " + transactionItem.getQuantity() + " "
+                + transactionItem.getItemName() + "s.";
     }
 
     private InventoryItem sellItem(InventoryItem item, int quantity) {
@@ -58,11 +56,7 @@ public class Shop {
     }
 
     private InventoryItem partialSell(InventoryItem item) {
-        if (item.getQuantity() > 0) {
-            return getRemainingAmountOfProduct(item);
-        } else {
-            throw new RuntimeException("No " + item.getItemName() + "s in stock!");
-        }
+        return getRemainingAmountOfProduct(item);
     }
 
     private InventoryItem getRemainingAmountOfProduct(InventoryItem item) {

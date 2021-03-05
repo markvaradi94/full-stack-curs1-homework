@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static java.util.Optional.ofNullable;
+import static java.util.Collections.unmodifiableList;
 
 public class Product {
     private final String name;
@@ -31,7 +32,7 @@ public class Product {
     }
 
     public List<Category> getCategories() {
-        return Collections.unmodifiableList(categories);
+        return unmodifiableList(categories);
     }
 
     public String getDescription() {
@@ -62,10 +63,10 @@ public class Product {
     }
 
     public static class ProductBuilder {
-        String name;
-        int price;
-        List<Category> categories = new ArrayList<>();
-        String description;
+        private String name;
+        private int price;
+        private final List<Category> categories = new ArrayList<>();
+        private String description;
 
         public static ProductBuilder product() {
             return new ProductBuilder();
@@ -82,6 +83,9 @@ public class Product {
         }
 
         public ProductBuilder category(Category category) {
+            if (category == null) {
+                throw new RuntimeException("Category cannot be null");
+            }
             this.categories.add(category);
             return this;
         }
@@ -92,7 +96,7 @@ public class Product {
         }
 
         public Product build() {
-            return new Product(name, price, Collections.unmodifiableList(categories), description);
+            return new Product(name, price, categories, description);
         }
     }
 }
