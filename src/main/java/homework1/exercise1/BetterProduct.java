@@ -23,6 +23,16 @@ public class BetterProduct {
     }
 
     public BetterProduct() {
+        this.categories = new ArrayList<>();
+    }
+
+    private BetterProduct(BetterProductBuilder builder) {
+        this.name = builder.state.name;
+        this.price = builder.state.price;
+        this.categories = ofNullable(builder.state.categories)
+                .map(ArrayList::new)
+                .orElseGet(ArrayList::new);
+        this.description = builder.state.description;
     }
 
     public String getName() {
@@ -73,28 +83,27 @@ public class BetterProduct {
         }
 
         public BetterProductBuilder name(String name) {
-            state = new BetterProduct(name.toUpperCase(), state.price, state.categories, state.description);
+            state.name = name;
             return this;
         }
 
         public BetterProductBuilder price(int price) {
-            state = new BetterProduct(state.name, price, state.categories, state.description);
+            state.price = price;
             return this;
         }
 
         public BetterProductBuilder category(String category) {
             state.categories.add(Category.valueOf(category.toUpperCase()));
-            state = new BetterProduct(state.name, state.price, state.categories, state.description);
             return this;
         }
 
         public BetterProductBuilder description(String description) {
-            state = new BetterProduct(state.name, state.price, state.categories, description);
+            state.description = description;
             return this;
         }
 
         public BetterProduct build() {
-            return new BetterProduct(state.name, state.price, state.categories, state.description);
+            return new BetterProduct(this);
         }
     }
 }
